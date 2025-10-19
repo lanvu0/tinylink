@@ -1,5 +1,5 @@
 import express from 'express';
-import { createDatabase, getLongUrl, incrementClickCount, saveLink } from './database.js';
+import { createDatabase, getLongUrl, getShortCodeData, incrementClickCount, saveLink } from './database.js';
 import validUrl from 'valid-url';
 import { nanoid } from 'nanoid';
 
@@ -48,12 +48,23 @@ app.get('/:shortCode', async (req, res) => {
     await incrementClickCount(shortCode);
 
     res.redirect(longUrl);
-    console.log(longUrl);
   } catch (error) {
     // Catch error raised from getLongUrl
     res.status(404).json({ error: 'Long url corresponding to short code could not be found' });
   }
-  
+});
+
+// GET /stats/:shortCode: Allow user to see how many times their link has been clicked
+app.get('/stats/:shortCode', async (req, res) => {
+  const shortCode = req.params.shortCode;
+  // Get data for longUrl, clicks, createdAt given shortCode
+  try {
+    const data = await getShortCodeData(shortCode);
+    res.json(data);
+  } catch (error) {
+    // Catch error raised from getLongUrl
+    res.status(404).json({ error: 'Could not fetch data for the short code' });
+  }
 });
 
 // Create database inside an async IIFE

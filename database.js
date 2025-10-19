@@ -64,3 +64,22 @@ export async function incrementClickCount(shortCode) {
     console.error('Error fetching the longUrl from the database:', error);
   }
 }
+
+// Functino to return longUrl, clicks, createdAt data given a shortCode
+export async function getShortCodeData(shortCode) {
+  try {
+    const db = await getDb();
+
+    // Fetch data'
+    const {
+      long_url: longUrl,
+      click_count: clickCount,
+      created_at: createdAt
+    } = await db.get('SELECT long_url, click_count, created_at FROM links WHERE short_code = ?', [shortCode]);
+
+    // Data has long_url, click_count, created_at
+    return {longUrl, clickCount, createdAt};
+  } catch (error) {
+    console.error('Error fetching the longUrl from the database:', error);
+  }
+}

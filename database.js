@@ -35,6 +35,32 @@ export async function saveLink(shortCode, longUrl) {
     // Insert shortCode, longUrl into database
     await db.run('INSERT INTO links (short_code, long_url) VALUES (?, ?)', [shortCode, longUrl]);
   } catch (error) {
-    console.error('Error creating database:', error);
+    console.error('Error saving link to the database:', error);
+  }
+}
+
+// Function to return the long_url given a shortCode
+export async function getLongUrl(shortCode) {
+  try {
+    const db = await getDb();
+
+    // Get longUrl given the short_code
+    const { long_url: longUrl } = await db.get('SELECT long_url FROM links WHERE short_code = ?', [shortCode]);
+
+    return longUrl;
+  } catch (error) {
+    console.error('Error fetching the longUrl from the database:', error);
+  }
+}
+
+// Function to increment the click_count corresponding to the shortCode
+export async function incrementClickCount(shortCode) {
+  try {
+    const db = await getDb();
+
+    // Add 1 to the click_count
+    await db.run('UPDATE links SET click_count = click_count + 1 WHERE short_code = ?', [shortCode]);
+  } catch (error) {
+    console.error('Error fetching the longUrl from the database:', error);
   }
 }

@@ -1,5 +1,5 @@
 import express from 'express';
-import { createDatabase, saveLink } from './database';
+import { createDatabase, getLongUrl, incrementClickCount, saveLink } from './database.js';
 import validUrl from 'valid-url';
 import { nanoid } from 'nanoid';
 
@@ -35,7 +35,26 @@ app.post('/shorten', async (req, res) => {
   }
 });
 
+// GET /:shortCode: Redirect shortUrl to longUrl
+app.get('/:shortCode', async (req, res) => {
+  // Get shortCode
+  const shortCode = req.params.shortCode;
 
+  // Look up long_url in database matching shortCode
+  try {
+    const longUrl = await getLongUrl(shortCode);
+
+    // Increment click_count
+    await incrementClickCount(shortCode);
+
+    res.redirect(longUrl);
+    console.log(longUrl);
+  } catch (error) {
+    // Catch error raised from getLongUrl
+    res.status(404).json({ error: 'Long url corresponding to short code could not be found' });
+  }
+  
+});
 
 // Create database inside an async IIFE
 (async () => {

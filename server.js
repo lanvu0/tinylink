@@ -6,9 +6,12 @@ import { nanoid } from 'nanoid';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-
 // Add middlewares
+// Parse JSON request bodies
 app.use(express.json());
+
+// Serve static files from 'public' directory
+app.use(express.static('public'));
 
 // Endpoints
 
@@ -74,5 +77,5 @@ app.get('/stats/:shortCode', async (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server running at http://localhost:${PORT}`);
 });

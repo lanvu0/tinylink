@@ -12,14 +12,28 @@ async function getDb() {
 export async function createDatabase() {
   try {
     const db = await getDb();
+    
+    // Enable foreign key support
+    await db.run('PRAGMA foreign_keys = ON;');
 
-    await db.exec(`
+    // Create users table first because links has foreign key to users
+    await db.run(`
+      CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        email TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    
+    await db.run(`
       CREATE TABLE IF NOT EXISTS links (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          short_code TEXT UNIQUE NOT NULL,
-          long_url TEXT NOT NULL,
-          click_count INTEGER DEFAULT 0 NOT NULL,
-          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        short_code TEXT UNIQUE NOT NULL,
+        long_url TEXT NOT NULL,
+        click_count INTEGER DEFAULT 0 NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        user_id INTEGER FOREIGN KEY REFERENCES users(id)
       )
     `);
   } catch (error) {

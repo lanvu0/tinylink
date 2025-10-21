@@ -1,5 +1,6 @@
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
+import bcrypt from 'bcryptjs';
 
 async function getDb() {
   return await open({
@@ -20,7 +21,7 @@ export async function createDatabase() {
     await db.run(`
       CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        email TEXT UNIQUE NOT NULL,
+        username TEXT UNIQUE NOT NULL,
         password TEXT NOT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )
@@ -33,7 +34,8 @@ export async function createDatabase() {
         long_url TEXT NOT NULL,
         click_count INTEGER DEFAULT 0 NOT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        user_id INTEGER FOREIGN KEY REFERENCES users(id)
+        user_id INTEGER,
+        FOREIGN KEY (user_id) REFERENCES users(id)
       )
     `);
   } catch (error) {
@@ -43,14 +45,37 @@ export async function createDatabase() {
 
 
 // Function to insert short_code and longUrl into links table
-export async function saveLink(shortCode, longUrl) {
+export async function saveLink(shortCode, longUrl, userId = null) {
   try {
     const db = await getDb();
     // Insert shortCode, longUrl into database
-    await db.run('INSERT INTO links (short_code, long_url) VALUES (?, ?)', [shortCode, longUrl]);
+    await db.run('INSERT INTO links (short_code, long_url, user_id) VALUES (?, ?, ?)', [shortCode, longUrl, userId]);
   } catch (error) {
     console.error('Error saving link to the database:', error);
   }
+}
+
+// Function to insert a new user into users table
+export async function saveUser(username, password) {
+  try {
+    const db = await getDb();
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Insert new user data
+    await db.run('INSERT INTO users (username, password) VALUES (?, ?)', [username, hashedPassword]);
+
+    // Return user object
+    return db.get('SELECT id, username FROM users WHERE username = ?', [username]);
+  } catch (error) {
+    console.error('Error saving user to the database:', error);
+  }
+}
+
+// Function to return the user by username
+export async function findUserByUsername(username) {
+  const db = await getDb();
+  return db.get('SELECT * FROM users WHERE username = ?', [username]);
 }
 
 // Function to return the long_url given a shortCode
@@ -59,9 +84,11 @@ export async function getLongUrl(shortCode) {
     const db = await getDb();
 
     // Get longUrl given the short_code
-    const { long_url: longUrl } = await db.get('SELECT long_url FROM links WHERE short_code = ?', [shortCode]);
-
-    return longUrl;
+    const row = await db.get('SELECT long_url FROM links WHERE short_code = ?', [shortCode]);
+    if (row) {
+      return row.long_url;
+    }
+    return null;
   } catch (error) {
     console.error('Error fetching the longUrl from the database:', error);
   }
@@ -88,11 +115,12 @@ export async function getShortCodeData(shortCode) {
     const {
       long_url: longUrl,
       click_count: clickCount,
-      created_at: createdAt
-    } = await db.get('SELECT long_url, click_count, created_at FROM links WHERE short_code = ?', [shortCode]);
+      created_at: createdAt,
+      user_id: userId
+    } = await db.get('SELECT long_url, click_count, created_at, user_id FROM links WHERE short_code = ?', [shortCode]);
 
     // Data has long_url, click_count, created_at
-    return {longUrl, clickCount, createdAt};
+    return {longUrl, clickCount, createdAt, userId};
   } catch (error) {
     console.error('Error fetching the longUrl from the database:', error);
   }

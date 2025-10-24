@@ -3,15 +3,50 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>URL Shortener</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    <form action="" method="post">
-      <label for="long-url">Enter a long url:</label>
-      <input type="text" id="long-url" name="long-url">
-      <button type="submit">Shorten Link</button>
-    </form>
-    <p id="result"></p>
+    <!-- Registration Form -->
+    <div id="register-section">
+      <h2>Register</h2>
+      <form id="register-form" method="post">
+        <label for="reg-username">Username:</label>
+        <input type="text" id="reg-username" name="username">
+        <label for="reg-password">Password:</label>
+        <input type="password" id="reg-password" name="password">
+        <button type="submit">Register</button>
+      </form>
+      <p id="register-result"></p>
+    </div>
+
+    <!-- Login Form -->
+    <div id="login-section">
+      <h2>Login</h2>
+      <form id="login-form" method="post">
+        <label for="login-username">Username:</label>
+        <input type="text" id="login-username" name="username">
+        <label for="login-password">Password:</label>
+        <input type="password" id="login-password" name="password">
+        <button type="submit">Login</button>
+      </form>
+      <p id="login-result"></p>
+    </div>
+
+    <!-- Shorten URL Form (only shown when logged in) -->
+    <div id="shorten-section" style="display: none;">
+      <h2>Shorten URL</h2>
+      <form id="shorten-form" method="post">
+        <label for="long-url">Enter a long URL:</label>
+        <input type="text" id="long-url" name="long-url">
+        <button type="submit">Shorten Link</button>
+      </form>
+      <p id="shorten-result"></p>
+    </div>
+
+    <!-- Logout Button (only shown when logged in) -->
+    <button id="logout-button" style="display: none;">Logout</button>
   </body>
   <script type="module" src="script.js"></script>
 </html>

@@ -45,7 +45,7 @@ export async function createDatabase() {
 
 
 // Function to insert short_code and longUrl into links table
-export async function saveLink(shortCode, longUrl, userId = null) {
+export async function saveLink(shortCode, longUrl, userId) {
   try {
     const db = await getDb();
     // Insert shortCode, longUrl into database

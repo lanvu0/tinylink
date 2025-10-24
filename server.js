@@ -130,7 +130,7 @@ app.post('/shorten', authMiddleware, async (req, res) => {
 
   try {
     // Save the code and url to the database
-    await saveLink(shortCode, longUrl);
+    await saveLink(shortCode, longUrl, userId);
     res.status(201).json({ shortUrl: `http://localhost:${PORT}/${shortCode}` });
   } catch (error) {
     // Catch error raised from saveLink

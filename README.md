@@ -12,7 +12,7 @@ TinyLink is a full-stack URL shortening service built with a modern, type-safe t
 
 -   **Secure User Authentication:** Implements a complete authentication system with user registration and login functionality using JWT (JSON Web Tokens) for secure, stateless API communication. Passwords are fully encrypted using `bcryptjs`.
 -   **URL Shortening:** Convert long URLs into unique, easy-to-share short links using `nanoid` for collision-resistant code generation.
--   **Custom Short Codes:** Users have the option to provide their own custom codes for personalized, branded links.
+-   **Custom Short Codes:** Users have the option to provide their own custom codes for personalised, branded links.
 -   **"My Links" Dashboard:** A private dashboard where authenticated users can view a complete list of all the links they have created, sorted by creation date.
 -   **Link Statistics:** Users can view individual click counts and creation details for each of their links.
 -   **Robust Validation:** The backend performs comprehensive validation to ensure submitted URLs are valid and that custom short codes meet format criteria and are not already in use.

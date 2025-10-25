@@ -1,5 +1,5 @@
 import express from 'express';
-import { createDatabase, findUserByUsername, getLongUrl, getShortCodeData, incrementClickCount, saveLink, saveUser } from './database.js';
+import { createDatabase, findUserByUsername, getLongUrl, getShortCodeData, incrementClickCount, saveLink, saveUser, isCodeTaken } from './database.js';
 import validUrl from 'valid-url';
 import { nanoid } from 'nanoid';
 import jwt from 'jsonwebtoken';
@@ -116,7 +116,7 @@ app.post('/login', async (req, res) => {
 // POST /shorten: Send a url to be shortened
 app.post('/shorten', authMiddleware, async (req, res) => {
   // Get the url from req.body
-  const { longUrl } = req.body;
+  const { longUrl, customCode } = req.body;
 
   const userId = req.user.userId; // From JWT
 
@@ -125,10 +125,21 @@ app.post('/shorten', authMiddleware, async (req, res) => {
     return res.status(400).json({ error: 'Invalid URL provided' });
   }
 
-  // Generate short code via nanoid
-  const shortCode = nanoid(7);
-
   try {
+    let shortCode;
+    // Check if customCode was provided
+    if (customCode) {
+      if (await isCodeTaken(customCode)) {
+        // Throw error: customCode is taken
+        return res.status(400).json({ error: 'Custom code is already taken' });
+      }
+      shortCode = customCode;
+    } else {
+      // Generate short code via nanoid
+      shortCode = nanoid(7);
+    }
+
+    console.log(customCode)
     // Save the code and url to the database
     await saveLink(shortCode, longUrl, userId);
     res.status(201).json({ shortUrl: `http://localhost:${PORT}/${shortCode}` });

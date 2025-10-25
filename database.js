@@ -125,3 +125,22 @@ export async function getShortCodeData(shortCode) {
     console.error('Error fetching the longUrl from the database:', error);
   }
 }
+
+// Functino to check if given code does not exist in database
+export async function isCodeTaken(shortCode) {
+  try {
+    const db = await getDb();
+
+    const result = await db.get('SELECT long_url FROM links WHERE short_code = ?', [shortCode]);
+
+    if (result) {
+      // Code is taken
+      return true;
+    }
+    // Code is not taken
+    return false;
+
+  } catch (error) {
+    console.error('Error fetching the longUrl from the database:', error);
+  }
+}

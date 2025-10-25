@@ -10,7 +10,7 @@ const app = express();
 // Add middlewares
 app.use(cors());
 app.use(express.json());
-app.use(express.static('frontend/public'));
+app.use(express.static('frontend/dist'));
 
 // Mount routes
 app.use(authRouter);

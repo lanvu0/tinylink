@@ -44,16 +44,20 @@ export async function getShortCodeData(shortCode: string) {
   try {
     const db = await getDb();
 
-    // Fetch data'
-    const {
-      long_url: longUrl,
-      click_count: clickCount,
-      created_at: createdAt,
-      user_id: userId
-    } = await db.get('SELECT long_url, click_count, created_at, user_id FROM links WHERE short_code = ?', [shortCode]);
+    // Fetch data
+    const row = await db.get('SELECT long_url, click_count, created_at, user_id FROM links WHERE short_code = ?', [shortCode]);
 
-    // Data has long_url, click_count, created_at
-    return { longUrl, clickCount, createdAt, userId };
+    if (!row) {
+      // Return null if not found
+      return null;
+    }
+
+    return {
+      longUrl: row.long_url,
+      clickCount: row.click_count,
+      createdAt: row.created_at,
+      userId: row.user_id
+    };
   } catch (error) {
     console.error('Error fetching the longUrl from the database:', error);
   }

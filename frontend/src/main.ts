@@ -1,3 +1,5 @@
+import './style.css';
+
 // Define interfaces for the data we expect from our API
 interface AuthApiResponse {
   token: string;
@@ -49,7 +51,7 @@ document.getElementById('register-form')?.addEventListener('submit', async event
   if (!resultElement) return;
 
   try {
-    const response = await fetch('http://localhost:3000/register', {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username: usernameInput.value, password: passwordInput.value })
@@ -88,7 +90,7 @@ document.getElementById('login-form')?.addEventListener('submit', async event =>
   if (!resultElement) return;
 
   try {
-    const response = await fetch('http://localhost:3000/login', {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username: usernameInput.value, password: passwordInput.value })
@@ -119,10 +121,14 @@ document.getElementById('shorten-form')?.addEventListener('submit', async event 
   const resultElement = document.getElementById('shorten-result');
   const token = localStorage.getItem('token');
 
-  if (!resultElement || !token) return;
+  if (!token) {
+    if(resultElement) resultElement.textContent = 'You are not logged in. Please refresh and log in again.';
+    return;
+  }
+  if (!resultElement) return;
 
   try {
-    const response = await fetch('http://localhost:3000/shorten', {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/shorten`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

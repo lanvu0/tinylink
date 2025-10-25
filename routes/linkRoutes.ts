@@ -14,7 +14,7 @@ router.post('/shorten', authMiddleware, async (req, res) => {
   const { longUrl, customCode } = req.body;
   
   // Verified via authMiddleware
-  const userId = parseInt(req.user!.userId); // From JWT
+  const userId = req.user!.userId; // From JWT
 
   // Validate the url using valid-url package
   if (!validUrl.isUri(longUrl)) {
@@ -67,6 +67,25 @@ router.post('/shorten', authMiddleware, async (req, res) => {
   }
 });
 
+
+// GET /stats/:shortCode: Allow user to see how many times their link has been clicked
+router.get('/stats/:shortCode', async (req, res) => {
+  const shortCode = req.params.shortCode;
+  const userId = req.user!.userId; // From JWT
+
+  // Get data for longUrl, clicks, createdAt given shortCode
+  try {
+    const data = await getShortCodeData(shortCode);
+    if (!data || data.userId !== userId) {
+      return res.status(403).json({ error: 'Unauthorised: You do not own this link' });
+    }
+    res.json(data);
+  } catch (error) {
+    // Catch error raised from getLongUrl
+    res.status(404).json({ error: 'Could not fetch data for the short code' });
+  }
+});
+
 // GET /:shortCode: Redirect shortUrl to longUrl
 router.get('/:shortCode', authMiddleware, async (req, res) => {
   // Get shortCode
@@ -88,24 +107,6 @@ router.get('/:shortCode', authMiddleware, async (req, res) => {
     // Database or server errors
     console.error('Error in redirect route:', error);
     return res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-// GET /stats/:shortCode: Allow user to see how many times their link has been clicked
-router.get('/stats/:shortCode', async (req, res) => {
-  const shortCode = req.params.shortCode;
-  const userId = parseInt(req.user!.userId); // From JWT
-
-  // Get data for longUrl, clicks, createdAt given shortCode
-  try {
-    const data = await getShortCodeData(shortCode);
-    if (!data || data.userId !== userId) {
-      return res.status(403).json({ error: 'Unauthorised: You do not own this link' });
-    }
-    res.json(data);
-  } catch (error) {
-    // Catch error raised from getLongUrl
-    res.status(404).json({ error: 'Could not fetch data for the short code' });
   }
 });
 

@@ -142,8 +142,25 @@ document.getElementById('shorten-form')?.addEventListener('submit', async event 
       throw new Error(`Response status: ${response.status}`);
     }
 
-    resultElement.textContent = `Short URL: ${(data as ShortenApiResponse).shortUrl}`;
+    // Create a clickable link
+    const shortUrl = (data as ShortenApiResponse).shortUrl;
+    resultElement.innerHTML = `
+      Short URL: <a href="${shortUrl}" target="_blank" rel="noopener noreferrer">${shortUrl}</a>
+      <button id="copy-button" style="display: inline-block;">Copy</button>
+    `;
     resultElement.style.color = 'green';
+
+    // Add event listener for the copy button
+    const copyButton = document.getElementById('copy-button');
+    if (copyButton) {
+      copyButton.addEventListener('click', () => {
+        navigator.clipboard.writeText(shortUrl).then(() => {
+          alert('Short URL copied to clipboard!');
+        }).catch(err => {
+          console.error('Failed to copy:', err);
+        });
+      });
+    }
   } catch (error) {
     if (error instanceof Error) {
       resultElement.textContent = error.message;

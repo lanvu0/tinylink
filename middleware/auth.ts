@@ -5,7 +5,6 @@ import { Request, Response, NextFunction } from 'express';
 // Authentication middleware: Verify JWTs for protected routes
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
-  console.log(authHeader)
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'No token provided' });

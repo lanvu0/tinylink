@@ -86,8 +86,9 @@ router.get('/stats/:shortCode', async (req, res) => {
   }
 });
 
+
 // GET /:shortCode: Redirect shortUrl to longUrl
-router.get('/:shortCode', authMiddleware, async (req, res) => {
+router.get('/:shortCode', async (req, res) => {
   // Get shortCode
   const shortCode = req.params.shortCode;
 

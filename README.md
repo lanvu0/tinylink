@@ -1,2 +1,130 @@
-# tinylink
+# TinyLink URL Shortener
 
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
+
+TinyLink is a full-stack URL shortening service inspired by applications like Bitly. It provides a clean and secure RESTful API on the backend and a responsive user interface on the frontend, allowing authenticated users to create, manage, and track short links.
+
+## Features
+
+-   **Secure User Authentication:** User registration and login functionality using JWT (JSON Web Tokens) for secure, stateless authentication. Passwords are fully encrypted using `bcryptjs`.
+-   **URL Shortening:** Convert long URLs into unique, easy-to-share short links.
+-   **Custom Short Codes:** Users can provide their own custom codes for personalised links.
+-   **Link Redirection:** The core feature that seamlessly redirects users from the short URL to the original long URL.
+-   **Click Tracking:** A protected endpoint allows users to view click counts and other statistics for links they own.
+-   **Robust Validation:** Ensures that submitted URLs are valid and that custom short codes meet specific criteria and are not already in use.
+
+## Tech Stack & Architecture
+
+This project is built with a modern, type-safe stack and follows a clean architectural pattern.
+
+-   **Backend:**
+    -   **Runtime:** Node.js
+    -   **Framework:** Express.js
+    -   **Language:** TypeScript
+    -   **Authentication:** JSON Web Tokens (`jsonwebtoken`)
+    -   **Password Hashing:** `bcryptjs`
+-   **Frontend:**
+    -   **Framework/Build Tool:** Vite
+    -   **Language:** TypeScript
+    -   **UI:** HTML5 & CSS3 (no framework)
+-   **Database:**
+    -   SQLite3
+
+The backend is structured with a service-oriented architecture, separating concerns into a **Routing Layer** (handling HTTP requests), a **Service Layer** (containing business logic), and a **Data Access Layer** (interacting with the database).
+
+## Getting Started
+
+To run this project locally, you will need Node.js and npm installed.
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/lanvu0/tinylink.git
+cd tinylink
+```
+
+### 2. Backend Setup
+
+The backend server is located in the root directory.
+
+```bash
+# Install backend dependencies
+npm install
+
+# Create an environment file
+touch .env
+```
+
+Open the `.env` file and add a secret key for signing JWTs.
+
+**.env**
+```
+JWT_SECRET=your_super_secret_key_here
+```
+
+### 3. Frontend Setup
+
+The frontend application is located in the `frontend` directory.
+
+```bash
+# Navigate to the frontend directory
+cd frontend
+
+# Install frontend dependencies
+npm install
+
+# Create a local environment file
+touch .env.local
+```
+
+Open the `frontend/.env.local` file and specify the URL of the backend API.
+
+**frontend/.env.local**
+```
+VITE_API_BASE_URL=http://localhost:3000
+```
+
+### 4. Running the Application
+
+You will need to run the backend and frontend servers in two separate terminal windows.
+
+**Terminal 1 (Backend - from the project root):**
+```bash
+# This command uses tsx to run the TypeScript server
+npm start
+
+# For a better development experience with auto-reloading:
+# 1. Update the "dev" script in package.json to: "nodemon --exec tsx server.ts"
+# 2. Run the command:
+npm run dev
+```
+The backend API will be running at `http://localhost:3000`.
+
+**Terminal 2 (Frontend - from the `frontend` directory):**
+```bash
+npm run dev
+```
+The frontend application will be available at `http://localhost:5173` (or another port if 5173 is in use). Open this URL in your browser to use the application.
+
+## API Endpoints
+
+The following are the primary endpoints exposed by the backend API.
+
+| Method | Endpoint              | Description                                        | Protection |
+| :----- | :-------------------- | :------------------------------------------------- | :--------- |
+| `POST` | `/register`           | Creates a new user account.                        | Public     |
+| `POST` | `/login`              | Authenticates a user and returns a JWT.            | Public     |
+| `POST` | `/shorten`            | Creates a new short link for the authenticated user. | Protected  |
+| `GET`  | `/:shortCode`         | Redirects to the original long URL.                | Public     |
+| `GET`  | `/stats/:shortCode`   | Retrieves click counts and other data for a link.  | Protected  |
+
+## Future Enhancements
+
+-   Implement a user dashboard to view, edit, and delete all created links.
+-   Expand link analytics to include timestamps and user-agent data for each click.
+-   Add comprehensive unit and integration tests for the backend services and routes.
+-   Containerise the application using Docker for easier deployment.

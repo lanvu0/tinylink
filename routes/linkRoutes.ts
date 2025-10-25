@@ -69,7 +69,7 @@ router.post('/shorten', authMiddleware, async (req, res) => {
 
 
 // GET /stats/:shortCode: Allow user to see how many times their link has been clicked
-router.get('/stats/:shortCode', async (req, res) => {
+router.get('/stats/:shortCode', authMiddleware, async (req, res) => {
   const shortCode = req.params.shortCode;
   const userId = req.user!.userId; // From JWT
 

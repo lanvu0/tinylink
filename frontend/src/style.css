@@ -1,48 +1,230 @@
+/* Define CSS custom properties for theming */
+:root {
+  --primary-color: #4a90e2;
+  --secondary-color: #50c878;
+  --background-color: #f4f7fa;
+  --card-background: #ffffff;
+  --text-color: #333333;
+  --error-color: #e74c3c;
+  --border-color: #e0e0e0;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-color: #6ab0ff;
+    --secondary-color: #70e1a0;
+    --background-color: #1a1a1a;
+    --card-background: #2c2c2c;
+    --text-color: #e0e0e0;
+    --border-color: #444444;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  }
+}
+
 body {
-  font-family: Arial, sans-serif;
-  max-width: 600px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  max-width: 50vw;
   margin: 0 auto;
   padding: 20px;
+  line-height: 1.6;
 }
 
+/* Card styling for sections */
+#register-section, #login-section, #shorten-section, #stats-section, #my-links-section {
+  background-color: var(--card-background);
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+
+/* Headings */
+h2, h3 {
+  color: var(--text-color);
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+/* Form styling */
 form {
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-label, input, button {
-  display: block;
-  margin: 10px 0;
+label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-color);
 }
 
 input {
   width: 100%;
-  padding: 8px;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: var(--card-background);
+  color: var(--text-color);
+  transition: var(--transition);
 }
 
+input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+}
+
+/* Button styling */
 button {
-  padding: 8px 16px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
+  transition: var(--transition);
 }
 
+button[type="submit"], #my-links-button, #logout-button {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+button[type="submit"]:hover, #my-links-button:hover, #logout-button:hover {
+  background-color: #357abd;
+}
+
+#copy-button, #stats-button {
+  background-color: var(--secondary-color);
+  color: white;
+  margin-left: 8px;
+}
+
+#copy-button:hover, #stats-button:hover {
+  background-color: #45a865;
+}
+
+/* Result messages */
 p {
-  color: green;
+  color: var(--secondary-color);
+  font-size: 0.9rem;
+  margin-top: 8px;
 }
 
 .error {
-  color: red;
+  color: var(--error-color);
 }
 
+/* Shorten result links */
 #shorten-result a {
-  color: #0066cc;
-  text-decoration: underline;
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
 }
 
 #shorten-result a:hover {
-  color: #003366;
+  text-decoration: underline;
 }
 
-#shorten-result button {
-  margin-left: 10px;
-  padding: 5px 10px;
-  cursor: pointer;
+/* Stats section */
+#stats-section {
+  border: 1px solid var(--border-color);
+  background-color: var(--card-background);
+}
+
+#stats-content p {
+  margin: 8px 0;
+  font-size: 0.9rem;
+}
+
+#stats-content strong {
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+/* User actions */
+#user-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+/* Links table */
+#links-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+#links-table th, #links-table td {
+  border: 1px solid var(--border-color);
+  padding: 12px;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+#links-table th {
+  background-color: var(--background-color);
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+#links-table tbody tr {
+  transition: var(--transition);
+}
+
+#links-table tbody tr:hover {
+  background-color: rgba(74, 144, 226, 0.1);
+}
+
+#links-table td a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+#links-table td a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive design */
+@media (max-width: 50vw) {
+  body {
+    padding: 16px;
+    max-width: 100%;
+  }
+
+  #register-section, #login-section, #shorten-section, #stats-section, #my-links-section {
+    padding: 16px;
+  }
+
+  #links-table th, #links-table td {
+    padding: 8px;
+    font-size: 0.85rem;
+  }
+
+  button {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Animation for section visibility */
+#register-section, #login-section, #shorten-section, #stats-section, #my-links-section, #user-actions {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

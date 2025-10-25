@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import { createDatabase } from './database.ts';
 import authRouter from './routes/authRoutes.ts';
 import linkRouter from './routes/linkRoutes.ts';
@@ -7,9 +8,8 @@ import { PORT } from './config.ts';
 const app = express();
 
 // Add middlewares
-// Parse JSON request bodies
+app.use(cors());
 app.use(express.json());
-// Serve static files from 'public' directory
 app.use(express.static('frontend/public'));
 
 // Mount routes

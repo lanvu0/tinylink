@@ -68,7 +68,7 @@ router.post('/shorten', authMiddleware, async (req, res) => {
 });
 
 // GET /:shortCode: Redirect shortUrl to longUrl
-router.get('/:shortCode', async (req, res) => {
+router.get('/:shortCode', authMiddleware, async (req, res) => {
   // Get shortCode
   const shortCode = req.params.shortCode;
 

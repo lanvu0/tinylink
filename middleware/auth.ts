@@ -18,7 +18,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     // Verify token
     const decoded = jwt.verify(token, JWT_SECRET as string);
     // Attach user data (userId, username) to request
-    req.user = decoded as any;
+    req.user = decoded as { userId: string };
     next();
   } catch (error) {
     console.error('Token verification error:', error);

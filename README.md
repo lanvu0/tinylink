@@ -1,25 +1,25 @@
 # TinyLink URL Shortener
 
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
-![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
+![TypeScript](https://imgshields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Node.js](https://imgshields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Express.js](https://imgshields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+![Vite](https://imgshields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![SQLite](https://imgshields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
 
-TinyLink is a full-stack URL shortening service inspired by applications like Bitly. It provides a clean and secure RESTful API on the backend and a responsive user interface on the frontend, allowing authenticated users to create, manage, and track short links.
+TinyLink is a full-stack URL shortening service built with a modern, type-safe technology stack. It provides a secure RESTful API and a responsive user interface, allowing authenticated users to create, manage, and track their short links through a personal dashboard.
 
 ## Features
 
--   **Secure User Authentication:** User registration and login functionality using JWT (JSON Web Tokens) for secure, stateless authentication. Passwords are fully encrypted using `bcryptjs`.
--   **URL Shortening:** Convert long URLs into unique, easy-to-share short links.
--   **Custom Short Codes:** Users can provide their own custom codes for personalised links.
--   **Link Redirection:** The core feature that seamlessly redirects users from the short URL to the original long URL.
--   **Click Tracking:** A protected endpoint allows users to view click counts and other statistics for links they own.
--   **Robust Validation:** Ensures that submitted URLs are valid and that custom short codes meet specific criteria and are not already in use.
+-   **Secure User Authentication:** Implements a complete authentication system with user registration and login functionality using JWT (JSON Web Tokens) for secure, stateless API communication. Passwords are fully encrypted using `bcryptjs`.
+-   **URL Shortening:** Convert long URLs into unique, easy-to-share short links using `nanoid` for collision-resistant code generation.
+-   **Custom Short Codes:** Users have the option to provide their own custom codes for personalized, branded links.
+-   **"My Links" Dashboard:** A private dashboard where authenticated users can view a complete list of all the links they have created, sorted by creation date.
+-   **Link Statistics:** Users can view individual click counts and creation details for each of their links.
+-   **Robust Validation:** The backend performs comprehensive validation to ensure submitted URLs are valid and that custom short codes meet format criteria and are not already in use.
 
 ## Tech Stack & Architecture
 
-This project is built with a modern, type-safe stack and follows a clean architectural pattern.
+This project is built with a modern, type-safe stack and follows a clean architectural pattern to ensure maintainability and scalability.
 
 -   **Backend:**
     -   **Runtime:** Node.js
@@ -28,13 +28,13 @@ This project is built with a modern, type-safe stack and follows a clean archite
     -   **Authentication:** JSON Web Tokens (`jsonwebtoken`)
     -   **Password Hashing:** `bcryptjs`
 -   **Frontend:**
-    -   **Framework/Build Tool:** Vite
+    -   **Build Tool:** Vite
     -   **Language:** TypeScript
-    -   **UI:** HTML5 & CSS3 (no framework)
+    -   **UI:** Vanilla HTML5 & CSS3 with a modern, responsive design.
 -   **Database:**
     -   SQLite3
 
-The backend is structured with a service-oriented architecture, separating concerns into a **Routing Layer** (handling HTTP requests), a **Service Layer** (containing business logic), and a **Data Access Layer** (interacting with the database).
+The backend is structured with a service-oriented architecture, separating concerns into a **Routing Layer** (handling HTTP requests), a **Service Layer** (containing business logic and error propagation), and a **Data Access Layer** (interacting with the database).
 
 ## Getting Started
 
@@ -96,13 +96,8 @@ You will need to run the backend and frontend servers in two separate terminal w
 ```bash
 # This command uses tsx to run the TypeScript server
 npm start
-
-# For a better development experience with auto-reloading:
-# 1. Update the "dev" script in package.json to: "nodemon --exec tsx server.ts"
-# 2. Run the command:
-npm run dev
 ```
-The backend API will be running at `http://localhost:3000`.
+The backend API will be running at `http://localhost:3000`. For a development experience with auto-reloading, a `dev` script using `nodemon` can be added to `package.json`.
 
 **Terminal 2 (Frontend - from the `frontend` directory):**
 ```bash
@@ -120,11 +115,5 @@ The following are the primary endpoints exposed by the backend API.
 | `POST` | `/login`              | Authenticates a user and returns a JWT.            | Public     |
 | `POST` | `/shorten`            | Creates a new short link for the authenticated user. | Protected  |
 | `GET`  | `/:shortCode`         | Redirects to the original long URL.                | Public     |
-| `GET`  | `/stats/:shortCode`   | Retrieves click counts and other data for a link.  | Protected  |
-
-## Future Enhancements
-
--   Implement a user dashboard to view, edit, and delete all created links.
--   Expand link analytics to include timestamps and user-agent data for each click.
--   Add comprehensive unit and integration tests for the backend services and routes.
--   Containerise the application using Docker for easier deployment.
+| `GET`  | `/stats/:shortCode`   | Retrieves data for a link owned by the user.       | Protected  |
+| `GET`  | `/my-links`           | Retrieves all links owned by the user.             | Protected  |

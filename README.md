@@ -10,7 +10,7 @@ TinyLink is a full-stack URL shortening service built with a modern, type-safe t
 
 Click the image to watch the demo on YouTube:
 
-[<image-card alt="Demo Video" src="thumbnail.png" ></image-card>](https://youtu.be/D-5LB7QbCaI)
+[![Demo Video](https://img.youtube.com/vi/D-5LB7QbCaI/0.jpg)](https://youtu.be/D-5LB7QbCaI)
 
 ## Features
 

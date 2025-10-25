@@ -44,3 +44,17 @@ export async function isCodeTaken(shortCode: string): Promise<boolean> {
   // Cast result to boolean type
   return !!result;
 }
+
+// Function to return all links given the userId
+export async function getLinksByUserId(userId: number) {
+  const db = await getDb();
+  // Fetch all relevant columns for the links owned by the user, ordered by most recent first
+  const links = await db.all(
+    `SELECT short_code, long_url, click_count, created_at 
+     FROM links 
+     WHERE user_id = ? 
+     ORDER BY created_at DESC`,
+    [userId]
+  );
+  return links;
+}

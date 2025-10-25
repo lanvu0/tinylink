@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
     <title>URL Shortener</title>
   </head>
   <body>
@@ -45,8 +46,32 @@
       <p id="shorten-result"></p>
     </div>
 
-    <!-- Logout Button (only shown when logged in) -->
-    <button id="logout-button" style="display: none;">Logout</button>
+    <div id="stats-section" style="display: none;">
+      <h3>Link Statistics</h3>
+      <div id="stats-content"></div>
+    </div>
+
+    <div id="user-actions" style="display: none;">
+      <button id="my-links-button">My Links</button>
+      <button id="logout-button">Logout</button>
+    </div>
+
+    <div id="my-links-section" style="display: none;">
+      <h2>My Links</h2>
+      <table id="links-table">
+        <thead>
+          <tr>
+            <th>Short Link</th>
+            <th>Original URL</th>
+            <th>Clicks</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody id="my-links-list">
+          <!-- Link rows will be inserted here by JavaScript -->
+        </tbody>
+      </table>
+    </div>
   </body>
   <script type="module" src="/src/main.ts"></script>
 </html>

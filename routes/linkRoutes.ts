@@ -1,7 +1,7 @@
 import express from 'express';
 import validUrl from 'valid-url';
 import { nanoid } from 'nanoid';
-import { saveLink, getLongUrl, incrementClickCount, getShortCodeData, isCodeTaken } from '../services/LinkService.js';
+import { saveLink, getLongUrl, incrementClickCount, getShortCodeData, isCodeTaken, getLinksByUserId } from '../services/LinkService.js';
 import { authMiddleware } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -83,6 +83,18 @@ router.get('/stats/:shortCode', authMiddleware, async (req, res) => {
   } catch (error) {
     // Catch error raised from getLongUrl
     res.status(404).json({ error: 'Could not fetch data for the short code' });
+  }
+});
+
+// GET /my-links: Get all links owned by the authenticated user
+router.get('/my-links', authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user!.userId;
+    const links = await getLinksByUserId(userId);
+    res.json(links);
+  } catch (error) {
+    console.error('Error fetching user links:', error);
+    res.status(500).json({ error: 'Failed to retrieve links' });
   }
 });
 

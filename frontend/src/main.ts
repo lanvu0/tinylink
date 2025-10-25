@@ -11,9 +11,6 @@ interface ShortenApiResponse {
   longUrl: string;
 }
 
-interface ApiError {
-  error: string;
-}
 
 // --- DOM Element Selection ---
 const shortenSection = document.getElementById('shorten-section');
@@ -30,6 +27,44 @@ function updateUIVisibility(isLoggedIn: boolean) {
     registerSection.style.display = isLoggedIn ? 'none' : 'block';
     loginSection.style.display = isLoggedIn ? 'none' : 'block';
   }
+}
+
+// --- Helper Function for fetch calls (to avoid repetition) ---
+async function apiFetch<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+  const token = localStorage.getItem('token');
+
+  // Set default headers. User-provided headers in options will override these.
+  const headers = new Headers({
+    'Content-Type': 'application/json',
+    ...options.headers,
+  });
+
+  // If a token exists, automatically add the Authorization header.
+  if (token) {
+    headers.set('Authorization', `Bearer ${token}`);
+  }
+
+  // Make the actual fetch call
+  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}${endpoint}`, {
+    ...options,
+    headers,
+  });
+
+  // Attempt to parse the JSON body of the response
+  const data = await response.json();
+
+  // If the response was not successful, throw an error with the message from the API
+  if (!response.ok) {
+    // Check if the API provided a specific error message
+    if (data && data.error) {
+      throw new Error(data.error);
+    }
+    // Fallback error message
+    throw new Error(`Request failed with status ${response.status}`);
+  }
+  
+  // If successful, return the parsed data
+  return data;
 }
 
 // --- Initial UI State ---
@@ -51,23 +86,13 @@ document.getElementById('register-form')?.addEventListener('submit', async event
   if (!resultElement) return;
 
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/register`, {
+    const data = await apiFetch<AuthApiResponse>('/register', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username: usernameInput.value, password: passwordInput.value })
     });
-    const data: AuthApiResponse | ApiError = await response.json();
-
-    if (!response.ok) {
-      // Type guard to safely access the 'error' property
-      if ('error' in data) {
-        throw new Error(data.error || 'Registration failed');
-      }
-      throw new Error('An unknown registration error occurred.');
-    }
 
     // Now `data` must have a `token` property.
-    localStorage.setItem('token', (data as AuthApiResponse).token);
+    localStorage.setItem('token', data.token);
     resultElement.textContent = 'Registration successful! You are logged in.';
     resultElement.style.color = 'green';
     updateUIVisibility(true);
@@ -90,17 +115,12 @@ document.getElementById('login-form')?.addEventListener('submit', async event =>
   if (!resultElement) return;
 
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/login`, {
+    const data = await apiFetch<AuthApiResponse>('/login', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username: usernameInput.value, password: passwordInput.value })
     });
-    const data: AuthApiResponse | ApiError = await response.json();
-    if (!response.ok) {
-      if ('error' in data) throw new Error(data.error);
-      throw new Error('Login failed');
-    }
-    localStorage.setItem('token', (data as AuthApiResponse).token);
+    
+    localStorage.setItem('token', data.token);
     resultElement.textContent = 'Login successful!';
     resultElement.style.color = 'green';
     updateUIVisibility(true);
@@ -119,31 +139,26 @@ document.getElementById('shorten-form')?.addEventListener('submit', async event 
   const longUrlInput = document.getElementById('long-url') as HTMLInputElement;
   const customCodeInput = document.getElementById('custom-code') as HTMLInputElement;
   const resultElement = document.getElementById('shorten-result');
-  const token = localStorage.getItem('token');
 
-  if (!token) {
-    if(resultElement) resultElement.textContent = 'You are not logged in. Please refresh and log in again.';
+  if (!resultElement) return;
+  
+  // The apiFetch function handles the token, but this check provides immediate UI feedback.
+  if (!localStorage.getItem('token')) {
+    resultElement.textContent = 'You are not logged in. Please refresh and log in again.';
     return;
   }
-  if (!resultElement) return;
 
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/shorten`, {
+    const data = await apiFetch<ShortenApiResponse>('/shorten', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({ longUrl: longUrlInput.value, customCode: customCodeInput.value })
+      body: JSON.stringify({ 
+        longUrl: longUrlInput.value, 
+        customCode: customCodeInput.value || undefined 
+      })
     });
-    const data: ShortenApiResponse | ApiError = await response.json();
-    if (!response.ok) {
-      if ('error' in data) throw new Error(data.error);
-      throw new Error(`Response status: ${response.status}`);
-    }
 
     // Create a clickable link
-    const shortUrl = (data as ShortenApiResponse).shortUrl;
+    const shortUrl = data.shortUrl;
     resultElement.innerHTML = `
       Short URL: <a href="${shortUrl}" target="_blank" rel="noopener noreferrer">${shortUrl}</a>
       <button id="copy-button" style="display: inline-block;">Copy</button>

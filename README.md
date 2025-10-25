@@ -1,10 +1,10 @@
 # TinyLink URL Shortener
 
-![TypeScript](https://imgshields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![Node.js](https://imgshields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
-![Express.js](https://imgshields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
-![Vite](https://imgshields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-![SQLite](https://imgshields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
 
 TinyLink is a full-stack URL shortening service built with a modern, type-safe technology stack. It provides a secure RESTful API and a responsive user interface, allowing authenticated users to create, manage, and track their short links through a personal dashboard.
 

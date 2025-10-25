@@ -15,7 +15,7 @@ interface ApiError {
   error: string;
 }
 
-// --- DOM Element Selection
+// --- DOM Element Selection ---
 const shortenSection = document.getElementById('shorten-section');
 const logoutButton = document.getElementById('logout-button');
 const registerSection = document.getElementById('register-section');

@@ -1,8 +1,9 @@
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET } from '../config.js';
+import { JWT_SECRET } from '../config.ts';
+import { Request, Response, NextFunction } from 'express';
 
 // Authentication middleware: Verify JWTs for protected routes
-export const authMiddleware = async (req, res, next) => {
+export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -15,9 +16,9 @@ export const authMiddleware = async (req, res, next) => {
 
   try {
     // Verify token
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET as string);
     // Attach user data (userId, username) to request
-    req.user = decoded;
+    req.user = decoded as any;
     next();
   } catch (error) {
     console.error('Token verification error:', error);

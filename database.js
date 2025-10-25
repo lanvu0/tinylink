@@ -130,17 +130,12 @@ export async function getShortCodeData(shortCode) {
 export async function isCodeTaken(shortCode) {
   try {
     const db = await getDb();
-
     const result = await db.get('SELECT long_url FROM links WHERE short_code = ?', [shortCode]);
-
-    if (result) {
-      // Code is taken
-      return true;
-    }
-    // Code is not taken
-    return false;
+    // Cast result to boolean type
+    return !!result;
 
   } catch (error) {
     console.error('Error fetching the longUrl from the database:', error);
+    throw new Error('Database error while checking code availability');
   }
 }

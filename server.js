@@ -129,20 +129,40 @@ app.post('/shorten', authMiddleware, async (req, res) => {
     let shortCode;
     // Check if customCode was provided
     if (customCode) {
+      // Validation: alphanumeric and max length
+      const codeRegex = /^[a-zA-Z0-9_-]{1,20}$/;
+      if (!codeRegex.test(customCode)) {
+        return res.status(400).json({ error: 'Custom code must be alphanumeric and up to 20 characters' });
+      }
+
+      // Validation: type must be string
+      if (typeof customCode !== 'string') {
+        return res.status(400).json({ error: 'Custom code must be a string' });
+      }
+
+      // Validation: code is not taken
       if (await isCodeTaken(customCode)) {
         // Throw error: customCode is taken
         return res.status(400).json({ error: 'Custom code is already taken' });
       }
+
+      // Passes all validation, save new customCode
       shortCode = customCode;
     } else {
       // Generate short code via nanoid
-      shortCode = nanoid(7);
+      while (await isCodeTaken(shortCode)) {
+        // Generate codes until unique
+        shortCode = nanoid(7); 
+      }
     }
 
-    console.log(customCode)
     // Save the code and url to the database
     await saveLink(shortCode, longUrl, userId);
-    res.status(201).json({ shortUrl: `http://localhost:${PORT}/${shortCode}` });
+    res.status(201).json({
+      shortUrl: `http://localhost:${PORT}/${shortCode}`,
+      shortCode,
+      longUrl
+    });
   } catch (error) {
     // Catch error raised from saveLink
     res.status(500).json({ error: 'Server issue: Could not save link to database' });
@@ -154,7 +174,6 @@ app.get('/:shortCode', async (req, res) => {
   // Get shortCode
   const shortCode = req.params.shortCode;
 
-  console.log(shortCode)
   // Look up long_url in database matching shortCode
   try {
     const longUrl = await getLongUrl(shortCode);

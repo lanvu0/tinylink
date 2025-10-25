@@ -8,7 +8,7 @@
 
 TinyLink is a full-stack URL shortening service built with a modern, type-safe technology stack. It provides a secure RESTful API and a responsive user interface, allowing authenticated users to create, manage, and track their short links through a personal dashboard.
 
-<video src="demo.mov" width="320" height="240" controls></video>
+<video src="demo.mp4" width="320" height="240" controls></video>
 
 ## Features
 

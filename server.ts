@@ -10,7 +10,7 @@ const app = express();
 // Parse JSON request bodies
 app.use(express.json());
 // Serve static files from 'public' directory
-app.use(express.static('public'));
+app.use(express.static('frontend/public'));
 
 // Mount routes
 app.use(authRouter);

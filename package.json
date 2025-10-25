@@ -2,12 +2,13 @@
   "name": "tinylink",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "server.ts",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.js",
-    "lint": "npx eslint"
+    "lint": "npx eslint",
+    "start": "npx tsx server.ts"
   },
   "repository": {
     "type": "git",

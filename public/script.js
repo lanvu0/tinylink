@@ -81,6 +81,7 @@ document.getElementById('login-form').addEventListener('submit', async event => 
 document.getElementById('shorten-form').addEventListener('submit', async event => {
   event.preventDefault();
   const longUrl = document.getElementById('long-url').value;
+  const customCode = document.getElementById('custom-code').value;
   const resultElement = document.getElementById('shorten-result');
   const token = localStorage.getItem('token');
 
@@ -91,7 +92,7 @@ document.getElementById('shorten-form').addEventListener('submit', async event =
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({ longUrl })
+      body: JSON.stringify({ longUrl, customCode })
     });
     const data = await response.json();
     if (!response.ok) {
